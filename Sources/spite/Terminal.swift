@@ -53,6 +53,11 @@ class Terminal {
             raw.c_oflag &= ~(UInt(OPOST))
             raw.c_cflag |= UInt(CS8)
             raw.c_lflag &= ~(UInt(ECHO | ICANON | IEXTEN | ISIG))
+            
+            // VMIN
+            raw.c_cc.16 = 0
+            // VTIME
+            raw.c_cc.17 = 1
 
             tcsetattr(stdio.fileDescriptor, TCSAFLUSH, &raw)
         }
