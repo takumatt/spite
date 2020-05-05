@@ -36,7 +36,9 @@ class Terminal {
             
             guard originalTermios != nil else { return }
             
-            tcsetattr(stdio.fileDescriptor, TCSAFLUSH, &originalTermios!)
+            if tcsetattr(stdio.fileDescriptor, TCSAFLUSH, &originalTermios!) == -1 {
+                die(description: "tcsetattr")
+            }
             
             originalTermios = nil
             
@@ -46,7 +48,10 @@ class Terminal {
             
             var raw: termios = _struct()
             
-            tcgetattr(stdio.fileDescriptor, &raw)
+            if tcgetattr(stdio.fileDescriptor, &raw) == -1 {
+                die(description: "tcgetattr")
+            }
+            
             originalTermios = raw
             
             raw.c_iflag &= ~(UInt(BRKINT | ICRNL | INPCK | ISTRIP | IXON))
@@ -59,7 +64,9 @@ class Terminal {
             // VTIME
             raw.c_cc.17 = 1
 
-            tcsetattr(stdio.fileDescriptor, TCSAFLUSH, &raw)
+            if tcsetattr(stdio.fileDescriptor, TCSAFLUSH, &raw) == -1 {
+                die(description: "tcsetattr")
+            }
         }
     }
 }

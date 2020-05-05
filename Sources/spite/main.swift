@@ -1,5 +1,11 @@
 import Foundation
 
+func die(description: String) {
+    
+    perror(description)
+    exit(1)
+}
+
 func main() -> Int {
 
     let stdio = FileHandle.standardInput
@@ -13,7 +19,9 @@ func main() -> Int {
         
         var c: UInt8 = 0
         
-        read(stdio.fileDescriptor, &c, 1)
+        if read(stdio.fileDescriptor, &c, 1) == -1 && errno != EAGAIN {
+            die(description: "read")
+        }
         
         if iscntrl(Int32(c)) > 0 {
             print(String(format: "%d\r", c))
