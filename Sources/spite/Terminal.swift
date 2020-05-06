@@ -33,7 +33,7 @@ class Terminal {
             
             guard originalTermios != nil else { return }
             
-            if tcsetattr(stdio.fileDescriptor, TCSAFLUSH, &originalTermios!) == -1 {
+            if tcsetattr(STDIN_FILENO, TCSAFLUSH, &originalTermios!) == -1 {
                 Self.die(description: "tcsetattr")
             }
             
@@ -45,7 +45,7 @@ class Terminal {
             
             var raw: termios = _struct()
             
-            if tcgetattr(stdio.fileDescriptor, &raw) == -1 {
+            if tcgetattr(STDIN_FILENO, &raw) == -1 {
                 Self.die(description: "tcgetattr")
             }
             
@@ -61,13 +61,16 @@ class Terminal {
             // VTIME
             raw.c_cc.17 = 1
 
-            if tcsetattr(stdio.fileDescriptor, TCSAFLUSH, &raw) == -1 {
+            if tcsetattr(STDIN_FILENO, TCSAFLUSH, &raw) == -1 {
                 Self.die(description: "tcsetattr")
             }
         }
     }
     
     static func die(description: String) {
+        
+        write(STDOUT_FILENO, "\u{1b}[2J", 4)
+        write(STDOUT_FILENO, "\u{1b}[H", 3)
         
         perror(description)
         exit(1)

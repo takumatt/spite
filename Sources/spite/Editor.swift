@@ -23,6 +23,12 @@ class Editor {
         }
     }
     
+    func refreshScreen() {
+        
+        write(STDOUT_FILENO, "\u{1b}[2J", 4)
+        write(STDOUT_FILENO, "\u{1b}[H", 3)
+    }
+    
     private func readKey() -> char {
         
         var c: char = 0x00
@@ -30,7 +36,7 @@ class Editor {
         
         repeat {
             
-            nread = read(stdio.fileDescriptor, &c, 1)
+            nread = read(STDIN_FILENO, &c, 1)
             
             if nread == -1 && errno != EAGAIN {
                 Terminal.die(description: "read")

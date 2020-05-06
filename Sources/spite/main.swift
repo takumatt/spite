@@ -1,7 +1,6 @@
 import Foundation
 
 typealias char = UInt8
-let stdio = FileHandle.standardInput
 
 func main() -> Int {
 
@@ -15,6 +14,7 @@ func main() -> Int {
     
     while true {
         
+        editor.refreshScreen()
         editor.processKeyPress()
     }
     
