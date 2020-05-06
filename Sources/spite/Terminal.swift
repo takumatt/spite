@@ -69,6 +69,12 @@ class Terminal {
             }
         }
     }
+    
+    func die(description: String) {
+        
+        perror(description)
+        exit(1)
+    }
 }
 
 fileprivate func _struct<T>() -> T {
