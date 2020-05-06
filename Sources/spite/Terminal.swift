@@ -11,12 +11,9 @@ class Terminal {
         case raw
     }
     
-    private let stdio: FileHandle
     private var originalTermios: termios?
 
-    init() {
-        stdio = FileHandle.standardInput
-    }
+    init() { }
 
     deinit {
         self.enter(mode: .cooked)
@@ -37,7 +34,7 @@ class Terminal {
             guard originalTermios != nil else { return }
             
             if tcsetattr(stdio.fileDescriptor, TCSAFLUSH, &originalTermios!) == -1 {
-                die(description: "tcsetattr")
+                Self.die(description: "tcsetattr")
             }
             
             originalTermios = nil
@@ -49,7 +46,7 @@ class Terminal {
             var raw: termios = _struct()
             
             if tcgetattr(stdio.fileDescriptor, &raw) == -1 {
-                die(description: "tcgetattr")
+                Self.die(description: "tcgetattr")
             }
             
             originalTermios = raw
@@ -65,12 +62,12 @@ class Terminal {
             raw.c_cc.17 = 1
 
             if tcsetattr(stdio.fileDescriptor, TCSAFLUSH, &raw) == -1 {
-                die(description: "tcsetattr")
+                Self.die(description: "tcsetattr")
             }
         }
     }
     
-    func die(description: String) {
+    static func die(description: String) {
         
         perror(description)
         exit(1)
