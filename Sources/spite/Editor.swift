@@ -23,9 +23,21 @@ class Editor {
         }
     }
     
+    func drawRows() {
+        
+        for _ in 0..<24 {
+            
+            write(STDOUT_FILENO, "~\r\n", 3)
+        }
+    }
+    
     func refreshScreen() {
         
         write(STDOUT_FILENO, "\u{1b}[2J", 4)
+        write(STDOUT_FILENO, "\u{1b}[H", 3)
+        
+        drawRows()
+        
         write(STDOUT_FILENO, "\u{1b}[H", 3)
     }
     

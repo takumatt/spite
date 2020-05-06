@@ -6,8 +6,6 @@ func main() -> Int {
 
     let terminal = Terminal()
     
-    print("Hello.")
-    
     terminal.enter(mode: .raw)
     
     let editor = Editor()
@@ -17,8 +15,6 @@ func main() -> Int {
         editor.refreshScreen()
         editor.processKeyPress()
     }
-    
-    print("Bye!")
 
     return 0
 }
