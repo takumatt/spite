@@ -17,7 +17,7 @@ class Editor {
         
         switch c {
         case CTRL_KEY("q"):
-            exit(0)
+            editorConfig.exitWith(code: 0)
         default:
             break
         }

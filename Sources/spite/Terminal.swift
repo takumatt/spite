@@ -10,14 +10,8 @@ class Terminal {
         case cooked
         case raw
     }
-    
-    private var originalTermios: termios?
 
     init() { }
-
-    deinit {
-        self.enter(mode: .cooked)
-    }
 
     // Raw mode for Swift
     // https://stackoverflow.com/questions/49748507/listening-to-stdin-in-swift
@@ -31,25 +25,25 @@ class Terminal {
             
         case .cooked:
             
-            guard originalTermios != nil else { return }
+            guard editorConfig.original_termios != nil else { return }
             
-            if tcsetattr(STDIN_FILENO, TCSAFLUSH, &originalTermios!) == -1 {
+            if tcsetattr(STDIN_FILENO, TCSAFLUSH, &editorConfig.original_termios!) == -1 {
                 Self.die(description: "tcsetattr")
             }
-            
-            originalTermios = nil
+
+            editorConfig.original_termios = nil
             
         case .raw:
             
-            guard originalTermios == nil else { return }
+            guard editorConfig.original_termios == nil else { return }
             
             var raw: termios = _struct()
             
             if tcgetattr(STDIN_FILENO, &raw) == -1 {
                 Self.die(description: "tcgetattr")
             }
-            
-            originalTermios = raw
+
+            editorConfig.original_termios = raw
             
             raw.c_iflag &= ~(UInt(BRKINT | ICRNL | INPCK | ISTRIP | IXON))
             raw.c_oflag &= ~(UInt(OPOST))
