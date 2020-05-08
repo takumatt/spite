@@ -9,7 +9,11 @@ import Foundation
 
 class Editor {
     
-    init() { }
+    let config: EditorConfig
+    
+    init(config: EditorConfig) {
+        self.config = config
+    }
     
     func processKeyPress() {
         
@@ -25,7 +29,7 @@ class Editor {
     
     func drawRows() {
         
-        for _ in 0..<24 {
+        for _ in 0..<config.screenSize.rows {
             
             write(STDOUT_FILENO, "~\r\n", 3)
         }
