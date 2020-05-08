@@ -61,6 +61,17 @@ class Terminal {
         }
     }
     
+    static func getWindowSize() -> (rows: UInt16, cols: UInt16)? {
+        
+        var ws = winsize()
+        
+        if ioctl(STDOUT_FILENO, TIOCGWINSZ, &ws) == -1 || ws.ws_col == 0 {
+            return nil
+        }
+        
+        return (ws.ws_row, ws.ws_col)
+    }
+    
     static func die(description: String) {
         
         write(STDOUT_FILENO, "\u{1b}[2J", 4)

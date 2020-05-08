@@ -1,7 +1,10 @@
 import Foundation
 
 typealias char = UInt8
-let editorConfig = EditorConfig()
+
+let editorConfig = EditorConfig(
+    size: Terminal.getWindowSize() ?? (0, 0)
+)
 
 func main() -> Int {
 

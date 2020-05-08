@@ -6,9 +6,12 @@ import Foundation
 
 class EditorConfig {
 
+    var screenSize: (UInt16, UInt16)
     var original_termios: termios? = nil
 
-    init() { }
+    init(size: (UInt16, UInt16)) {
+        self.screenSize = size
+    }
     
     func exitWith(code: Int32) {
         
