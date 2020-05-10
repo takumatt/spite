@@ -5,8 +5,8 @@ let editorConfig = EditorConfig()
 
 func main() -> Int {
 
-    let terminal = Terminal()
     let editor = Editor(config: editorConfig)
+    let terminal = Terminal()
     
     terminal.enter(mode: .raw)
     

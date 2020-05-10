@@ -65,12 +65,42 @@ class Terminal {
         
         var ws = winsize()
         
-        if ioctl(STDOUT_FILENO, TIOCGWINSZ, &ws) == -1 || ws.ws_col == 0 {
+        // XXX: tmp
+        if true
+            || ioctl(STDOUT_FILENO, TIOCGWINSZ, &ws) == -1
+            || ws.ws_col == 0 {
+            
+            if write(STDOUT_FILENO, "\u{1b}[999C\u{1b}[999B", 12) != 12 {
+                return nil
+            }
+            
+            _ = Self.readKey()
+            
             return nil
+        } else {
+            return (ws.ws_row, ws.ws_col)
         }
-        
-        return (ws.ws_row, ws.ws_col)
     }
+    
+    // NOTE: this is temporaly here
+    
+    private static func readKey() -> char {
+        
+        var c: char = 0x00
+        var nread: Int
+        
+        repeat {
+            
+            nread = read(STDIN_FILENO, &c, 1)
+            
+            if nread == -1 && errno != EAGAIN {
+                Terminal.die(description: "read")
+            }
+        } while nread != 1
+        
+        return c
+    }
+
     
     static func die(description: String) {
         
