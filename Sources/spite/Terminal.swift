@@ -65,21 +65,67 @@ class Terminal {
         
         var ws = winsize()
         
-        // XXX: tmp
-        if true
-            || ioctl(STDOUT_FILENO, TIOCGWINSZ, &ws) == -1
+        if ioctl(STDOUT_FILENO, TIOCGWINSZ, &ws) == -1
             || ws.ws_col == 0 {
             
             if write(STDOUT_FILENO, "\u{1b}[999C\u{1b}[999B", 12) != 12 {
                 return nil
             }
             
-            _ = Self.readKey()
+            if let code = Self.getCursorPosition(rows: &ws.ws_row, cols: &ws.ws_col), code != 0 {
+                Terminal.die(description: "getCursorPosition")
+            }
             
-            return nil
+            return (ws.ws_row, ws.ws_col)
         } else {
             return (ws.ws_row, ws.ws_col)
         }
+    }
+    
+    private static func getCursorPosition(rows: inout UInt16, cols: inout UInt16) -> Int? {
+        
+        // XXX: this won't work
+        
+        return -1
+        
+        var buf = [Int8](repeating: 0x00, count: 32)
+        var i: Int = 0
+        
+        guard write(STDOUT_FILENO, "\u{1b}[6n", 4) == 4 else {
+            return nil
+        }
+        
+        while i < buf.count - 1 {
+            
+            if read(STDIN_FILENO, &buf[i], 1) != 1 {
+                break
+            }
+            
+            let r = Int8(Character("R").asciiValue!)
+            
+            if buf[i] == r {
+                break
+            }
+            
+            print(String(format: "%c", buf[i]))
+            
+            i += 1
+        }
+        
+        buf[i] = 0x00
+        
+        if buf[0] != Character("\u{1b}").asciiValue!
+        || buf[1] != Character("[").asciiValue! {
+            return nil
+        }
+        
+        
+        
+        if vsscanf(&buf[2], "%d;%d", getVaList([rows, cols])) != 2 {
+            return nil
+        }
+                
+        return 0
     }
     
     // NOTE: this is temporaly here
