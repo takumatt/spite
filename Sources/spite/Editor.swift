@@ -29,11 +29,23 @@ class Editor {
         }
     }
     
+    // XXX: "~" characters are out of position
+    // FIXME: buffer is broken.
+    
     func drawRaws(appendBuffer ab: inout AppendBuffer) {
         
         for r in 0..<config.screenSize.rows {
             
-            ab.append("~", 1)
+            if r == config.screenSize.rows / 3 {
+                let len = MemoryLayout<String>.size(ofValue: "ahokusa")
+                ab.append("ahokusa", len)
+            } else {
+                ab.append("~", 1)
+            }
+            
+            // こういうやつStringにした時点で意味ない気がするがどうなんだ
+            
+            ab.append("\u{1b}[K", 3)
             
             if r < config.screenSize.rows - 1 {
                 ab.append("\r\n", 2)
@@ -45,12 +57,13 @@ class Editor {
         
         var ab = AppendBuffer()
         
-        ab.append("\u{1b}[2J", 4)
+        ab.append("\u{1b}[?25l", 6)
         ab.append("\u{1b}[H", 3)
         
         drawRaws(appendBuffer: &ab)
         
         ab.append("\u{1b}[H", 3)
+        ab.append("\u{1b}[?25h", 6)
         
         write(STDOUT_FILENO, ab.buffer, ab.length)
     }
