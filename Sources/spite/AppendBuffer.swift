@@ -24,15 +24,8 @@ struct AppendBuffer {
     
     // TODO: log
     
-    mutating func append(_ s: String, _ count: Int) {
-        
-        let _char = s.compactMap { $0.asciiValue }
-        
-        guard _char.count > 0 else {
-            return
-        }
-        
-        buffer += _char
-        self.length += count
+    mutating func append(_ s: String) {
+        buffer += Array(s.utf8)
+        length += s.count
     }
 }
