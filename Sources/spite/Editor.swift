@@ -35,12 +35,23 @@ class Editor {
             
             if r == config.screenSize.rows / 3 {
                 
-                ab.append(String(
+                let message = String(
                     """
                     Spite editor --version \(SPITE_VERSION)
                     """
                     .prefix(Int(config.screenSize.cols))
-                ))
+                )
+                
+                var padding = (Int(config.screenSize.cols) - message.count) / 2
+                
+                if padding > 1 {
+                    ab.append("~")
+                    padding -= 1
+                }
+                
+                (0..<padding).forEach { _ in ab.append(" ") }
+                
+                ab.append(message)
             } else {
                 ab.append("~")
             }
