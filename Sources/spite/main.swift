@@ -1,5 +1,8 @@
 import Foundation
 
+// TODO: move
+let SPITE_VERSION = "0.0.1"
+
 typealias char = UInt8
 let editorConfig = EditorConfig()
 

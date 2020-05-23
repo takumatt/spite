@@ -34,7 +34,13 @@ class Editor {
         for r in 0..<config.screenSize.rows {
             
             if r == config.screenSize.rows / 3 {
-                ab.append("hello")
+                
+                ab.append(String(
+                    """
+                    Spite editor --version \(SPITE_VERSION)
+                    """
+                    .prefix(Int(config.screenSize.cols))
+                ))
             } else {
                 ab.append("~")
             }
