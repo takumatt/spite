@@ -20,29 +20,39 @@ class Editor {
         let c = readKey()
         
         switch c {
+            
         case CTRL_KEY("q"):
             editorConfig.exitWith(code: 0)
+            
         default:
             break
         }
     }
     
-    func drawRows() {
+    func drawRaws(appendBuffer ab: inout AppendBuffer) {
         
-        for _ in 0..<config.screenSize.rows {
+        for r in 0..<config.screenSize.rows {
             
-            write(STDOUT_FILENO, "~\r\n", 3)
+            ab.append("~", 1)
+            
+            if r < config.screenSize.rows - 1 {
+                ab.append("\r\n", 2)
+            }
         }
     }
     
     func refreshScreen() {
         
-        write(STDOUT_FILENO, "\u{1b}[2J", 4)
-        write(STDOUT_FILENO, "\u{1b}[H", 3)
+        var ab = AppendBuffer()
         
-        drawRows()
+        ab.append("\u{1b}[2J", 4)
+        ab.append("\u{1b}[H", 3)
         
-        write(STDOUT_FILENO, "\u{1b}[H", 3)
+        drawRaws(appendBuffer: &ab)
+        
+        ab.append("\u{1b}[H", 3)
+        
+        write(STDOUT_FILENO, ab.buffer, ab.length)
     }
     
     private func readKey() -> char {

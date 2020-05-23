@@ -9,17 +9,30 @@ import Foundation
 
 struct AppendBuffer {
     
-    var buf: String?
-    
-    var length: Int {
-        return buf?.count ?? 0
-    }
+    var buffer: [char]
+    var length: Int
     
     init() {
-        self.buf = nil
+        self.buffer = []
+        self.length = 0
     }
     
-    mutating func append(str: String) {
-        buf?.append(str)
+    mutating func append(_ s: [char], _ count: Int) {
+        buffer += s
+        length += count
+    }
+    
+    // TODO: log
+    
+    mutating func append(_ s: String, _ count: Int) {
+        
+        let _char = s.compactMap { $0.asciiValue }
+        
+        guard _char.count > 0 else {
+            return
+        }
+        
+        buffer += _char
+        self.length += count
     }
 }
