@@ -119,7 +119,33 @@ class Editor {
             }
         } while nread != 1
         
-        return c
+        if c == "\u{1b}".char {
+            
+            var seq: [char] = []
+            
+            guard read(STDIN_FILENO, &seq[0], 1) == 1,
+                  read(STDIN_FILENO, &seq[1], 1) == 1
+            else { return "\u{1b}".char! }
+            
+            if seq[0] == "[".char {
+                switch seq[1] {
+                case "A".char:
+                    return "w".char!
+                case "B".char:
+                    return "s".char!
+                case "C".char:
+                    return "d".char!
+                case "D".char:
+                    return "a".char!
+                default:
+                    return "\u{1b}".char!
+                }
+            }
+            
+            return "\u{1b}".char!
+        } else {
+            return c
+        }
     }
     
     private func CTRL_KEY(_ str: String) -> char {
