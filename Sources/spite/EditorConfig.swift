@@ -5,11 +5,14 @@
 import Foundation
 
 class EditorConfig {
-
+    
+    var cx, cy: Int
     var screenSize: (rows: UInt16, cols: UInt16)
     var original_termios: termios? = nil
 
     init() {
+        
+        (cx, cy) = (0, 0)
         
         if let size = Terminal.getWindowSize() {
             self.screenSize = size
