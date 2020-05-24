@@ -24,6 +24,9 @@ class EditorConfig {
     
     func exitWith(code: Int32) {
         
+        write(STDOUT_FILENO, "\u{1b}[2J", 4)
+        write(STDOUT_FILENO, "\u{1b}[H", 3)
+        
         self.enterCookedMode()
         
         exit(code)

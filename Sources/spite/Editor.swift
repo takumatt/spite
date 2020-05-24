@@ -15,6 +15,21 @@ class Editor {
         self.config = config
     }
     
+    func moveCursor(key: char) {
+        switch key {
+        case "a".char:
+            config.cx -= 1
+        case "d".char:
+            config.cx += 1
+        case "w".char:
+            config.cy -= 1
+        case "s".char:
+            config.cy += 1
+        default:
+            break
+        }
+    }
+    
     func processKeyPress() {
         
         let c = readKey()
@@ -23,6 +38,12 @@ class Editor {
             
         case CTRL_KEY("q"):
             editorConfig.exitWith(code: 0)
+            
+        case "w".char,
+             "a".char,
+             "s".char,
+             "d".char:
+            moveCursor(key: c)
             
         default:
             break

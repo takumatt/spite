@@ -15,3 +15,10 @@ extension UInt8 {
         return self == asciiValue
     }
 }
+
+extension String {
+    
+    var char: UInt8? {
+        return self.first?.asciiValue
+    }
+}
