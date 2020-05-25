@@ -11,13 +11,15 @@ class Editor {
     
     struct Key {
         
-        enum KeyType {
+        enum KeyType: Equatable {
             case alphabet(char)
             case escape
             case arrowLeft
             case arrowRight
             case arrowUp
             case arrowDown
+            case pageUp
+            case pageDown
         }
         
         let type: KeyType
@@ -29,27 +31,9 @@ class Editor {
         self.config = config
     }
     
-    func moveCursor(key: Key) {
+    func moveCursor(type: Key.KeyType) {
         
-        switch key.type {
-        case .alphabet(let c):
-            
-            switch c {
-            case "a".char:
-                guard config.cx > 0 else { break }
-                config.cx -= 1
-            case "d".char:
-                guard config.cx < config.screenSize.cols - 1 else { break }
-                config.cx += 1
-            case "w".char:
-                guard config.cy > 0 else { break }
-                config.cy -= 1
-            case "s".char:
-                guard config.cy < config.screenSize.rows - 1 else { break }
-                config.cy += 1
-            default: break
-            }
-            
+        switch type {
         case .arrowLeft:
             guard config.cx > 0 else { break }
             config.cx -= 1
@@ -79,21 +63,26 @@ class Editor {
             case CTRL_KEY("q"):
                 editorConfig.exitWith(code: 0)
                 
-            case "w".char,
-                 "a".char,
-                 "s".char,
-                 "d".char:
-                moveCursor(key: key)
+            case "w".char:
+                moveCursor(type: .arrowUp)
+            case "a".char:
+                moveCursor(type: .arrowLeft)
+            case "s".char:
+                moveCursor(type: .arrowDown)
+            case "d".char:
+                moveCursor(type: .arrowRight)
                 
             default:
                 break
             }
             
-        case .arrowLeft,
-             .arrowRight,
-             .arrowUp,
-             .arrowDown:
-            moveCursor(key: key)
+        case .arrowLeft, .arrowRight, .arrowUp, .arrowDown:
+            moveCursor(type: key.type)
+            
+        case .pageUp, .pageDown:
+            (0..<config.screenSize.rows).forEach { _ in
+                moveCursor(type: key.type == .pageUp ? .arrowUp : .arrowDown)
+            }
 
         default:
             break
@@ -176,17 +165,35 @@ class Editor {
                 else { return .init(type: .escape) }
             
             if seq[0] == "[".char {
-                switch seq[1] {
-                case "A".char:
-                    return .init(type: .arrowUp)
-                case "B".char:
-                    return .init(type: .arrowDown)
-                case "C".char:
-                    return .init(type: .arrowRight)
-                case "D".char:
-                    return .init(type: .arrowLeft)
-                default:
-                    return .init(type: .escape)
+                
+                if seq[1] >= "0".char! && seq[1] <= "9".char! {
+                    
+                    guard read(STDIN_FILENO, &seq[2], 1) == 1
+                        else { return .init(type: .escape) }
+                    
+                    if seq[2] == "~".char! {
+                        
+                        switch seq[1] {
+                        case "5".char!:
+                            return .init(type: .pageUp)
+                        case "6".char!:
+                            return .init(type: .pageDown)
+                        default: break
+                        }
+                    }
+                } else {
+                
+                    switch seq[1] {
+                    case "A".char:
+                        return .init(type: .arrowUp)
+                    case "B".char:
+                        return .init(type: .arrowDown)
+                    case "C".char:
+                        return .init(type: .arrowRight)
+                    case "D".char:
+                        return .init(type: .arrowLeft)
+                    default: break
+                    }
                 }
             }
             return .init(type: .escape)
