@@ -22,6 +22,8 @@ class EditorConfig {
         }
     }
     
+    // TODO: move
+    
     func exitWith(code: Int32) {
         
         write(STDOUT_FILENO, "\u{1b}[2J", 4)

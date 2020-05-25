@@ -10,22 +10,18 @@ import Foundation
 struct AppendBuffer {
     
     var buffer: [char]
-    var length: Int
+    
+    var length: Int {
+        return buffer.count
+    }
     
     init() {
         self.buffer = []
-        self.length = 0
-    }
-    
-    mutating func append(_ s: [char], _ count: Int) {
-        buffer += s
-        length += count
     }
     
     // TODO: log
     
     mutating func append(_ s: String) {
         buffer += Array(s.utf8)
-        length = buffer.count
     }
 }
