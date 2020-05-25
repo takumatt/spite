@@ -114,11 +114,12 @@ class Editor {
             if nread == -1 && errno != EAGAIN {
                 Terminal.die(description: "read")
             }
+            
         } while nread != 1
         
         if c == "\u{1b}".char {
             
-            var seq: [char] = []
+            var seq: [char] = Array(repeating: 0x00, count: 3)
             
             guard read(STDIN_FILENO, &seq[0], 1) == 1,
                   read(STDIN_FILENO, &seq[1], 1) == 1
