@@ -9,44 +9,18 @@ import Foundation
 
 class Editor {
     
-    enum Key: RawRepresentable {
+    struct Key {
         
-        case arrowLeft
-        case arrowRight
-        case arrowUp
-        case arrowDown
-        
-        init?(rawValue: char) {
-            
-            switch rawValue {
-            
-            case "a".char!:
-                self = .arrowLeft
-            case "d".char!:
-                self = .arrowRight
-            case "w".char!:
-                self = .arrowUp
-            case "s".char!:
-                self = .arrowDown
-            default:
-                return nil
-            }
+        enum KeyType {
+            case alphabet(char)
+            case escape
+            case arrowLeft
+            case arrowRight
+            case arrowUp
+            case arrowDown
         }
         
-        var rawValue: char {
-            
-            switch self {
-                
-            case .arrowLeft:
-                return "a".char!
-            case .arrowRight:
-                return "d".char!
-            case .arrowUp:
-                return "w".char!
-            case .arrowDown:
-                return "s".char!
-            }
-        }
+        let type: KeyType
     }
     
     let config: EditorConfig
@@ -55,11 +29,23 @@ class Editor {
         self.config = config
     }
     
-    func moveCursor(key: char) {
+    func moveCursor(key: Key) {
         
-        let key = Key(rawValue: key)
-        
-        switch key {
+        switch key.type {
+        case .alphabet(let c):
+            
+            switch c {
+            case "a".char:
+                config.cx -= 1
+            case "d".char:
+                config.cx += 1
+            case "w".char:
+                config.cy -= 1
+            case "s".char:
+                config.cy += 1
+            default: break
+            }
+            
         case .arrowLeft:
             config.cx -= 1
         case .arrowRight:
@@ -68,26 +54,39 @@ class Editor {
             config.cy -= 1
         case .arrowDown:
             config.cy += 1
-        default:
-            break
+        default: break
         }
     }
     
     func processKeyPress() {
         
-        let c = readKey()
+        let key = readKey()
         
-        switch c {
+        switch key.type {
             
-        case CTRL_KEY("q"):
-            editorConfig.exitWith(code: 0)
+        case .alphabet(let char):
             
-        case "w".char,
-             "a".char,
-             "s".char,
-             "d".char:
-            moveCursor(key: c)
+            switch char {
+                
+            case CTRL_KEY("q"):
+                editorConfig.exitWith(code: 0)
+                
+            case "w".char,
+                 "a".char,
+                 "s".char,
+                 "d".char:
+                moveCursor(key: key)
+                
+            default:
+                break
+            }
             
+        case .arrowLeft,
+             .arrowRight,
+             .arrowUp,
+             .arrowDown:
+            moveCursor(key: key)
+
         default:
             break
         }
@@ -145,7 +144,7 @@ class Editor {
         write(STDOUT_FILENO, ab.buffer, ab.length)
     }
     
-    private func readKey() -> char {
+    private func readKey() -> Key {
         
         var c: char = 0x00
         var nread: Int
@@ -166,26 +165,25 @@ class Editor {
             
             guard read(STDIN_FILENO, &seq[0], 1) == 1,
                   read(STDIN_FILENO, &seq[1], 1) == 1
-            else { return "\u{1b}".char! }
+                else { return .init(type: .escape) }
             
             if seq[0] == "[".char {
                 switch seq[1] {
                 case "A".char:
-                    return Key.arrowUp.rawValue
+                    return .init(type: .arrowUp)
                 case "B".char:
-                    return Key.arrowDown.rawValue
+                    return .init(type: .arrowDown)
                 case "C".char:
-                    return Key.arrowRight.rawValue
+                    return .init(type: .arrowRight)
                 case "D".char:
-                    return Key.arrowLeft.rawValue
+                    return .init(type: .arrowLeft)
                 default:
-                    return "\u{1b}".char!
+                    return .init(type: .escape)
                 }
             }
-            
-            return "\u{1b}".char!
+            return .init(type: .escape)
         } else {
-            return c
+            return .init(type: .alphabet(c))
         }
     }
     
