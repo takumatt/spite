@@ -9,6 +9,46 @@ import Foundation
 
 class Editor {
     
+    enum Key: RawRepresentable {
+        
+        case arrowLeft
+        case arrowRight
+        case arrowUp
+        case arrowDown
+        
+        init?(rawValue: char) {
+            
+            switch rawValue {
+            
+            case "a".char!:
+                self = .arrowLeft
+            case "d".char!:
+                self = .arrowRight
+            case "w".char!:
+                self = .arrowUp
+            case "s".char!:
+                self = .arrowDown
+            default:
+                return nil
+            }
+        }
+        
+        var rawValue: char {
+            
+            switch self {
+                
+            case .arrowLeft:
+                return "a".char!
+            case .arrowRight:
+                return "d".char!
+            case .arrowUp:
+                return "w".char!
+            case .arrowDown:
+                return "s".char!
+            }
+        }
+    }
+    
     let config: EditorConfig
     
     init(config: EditorConfig) {
@@ -16,14 +56,17 @@ class Editor {
     }
     
     func moveCursor(key: char) {
+        
+        let key = Key(rawValue: key)
+        
         switch key {
-        case "a".char:
+        case .arrowLeft:
             config.cx -= 1
-        case "d".char:
+        case .arrowRight:
             config.cx += 1
-        case "w".char:
+        case .arrowUp:
             config.cy -= 1
-        case "s".char:
+        case .arrowDown:
             config.cy += 1
         default:
             break
@@ -128,13 +171,13 @@ class Editor {
             if seq[0] == "[".char {
                 switch seq[1] {
                 case "A".char:
-                    return "w".char!
+                    return Key.arrowUp.rawValue
                 case "B".char:
-                    return "s".char!
+                    return Key.arrowDown.rawValue
                 case "C".char:
-                    return "d".char!
+                    return Key.arrowRight.rawValue
                 case "D".char:
-                    return "a".char!
+                    return Key.arrowLeft.rawValue
                 default:
                     return "\u{1b}".char!
                 }
