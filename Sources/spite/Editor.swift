@@ -36,23 +36,31 @@ class Editor {
             
             switch c {
             case "a".char:
+                guard config.cx > 0 else { break }
                 config.cx -= 1
             case "d".char:
+                guard config.cx < config.screenSize.cols - 1 else { break }
                 config.cx += 1
             case "w".char:
+                guard config.cy > 0 else { break }
                 config.cy -= 1
             case "s".char:
+                guard config.cy < config.screenSize.rows - 1 else { break }
                 config.cy += 1
             default: break
             }
             
         case .arrowLeft:
+            guard config.cx > 0 else { break }
             config.cx -= 1
         case .arrowRight:
+            guard config.cx < config.screenSize.cols - 1 else { break }
             config.cx += 1
         case .arrowUp:
+            guard config.cy > 0 else { break }
             config.cy -= 1
         case .arrowDown:
+            guard config.cy < config.screenSize.rows - 1 else { break }
             config.cy += 1
         default: break
         }
