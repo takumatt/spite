@@ -26,6 +26,6 @@ struct AppendBuffer {
     
     mutating func append(_ s: String) {
         buffer += Array(s.utf8)
-        length += s.count
+        length = buffer.count
     }
 }
