@@ -18,6 +18,8 @@ class Editor {
             case arrowRight
             case arrowUp
             case arrowDown
+            case home
+            case end
             case pageUp
             case pageDown
         }
@@ -46,6 +48,14 @@ class Editor {
         case .arrowDown:
             guard config.cy < config.screenSize.rows - 1 else { break }
             config.cy += 1
+        case .home:
+            config.cx = 0
+        case .end:
+            config.cx = Int(config.screenSize.cols - 1)
+        case .pageUp:
+            config.cy = 0
+        case .pageDown:
+            config.cy = Int(config.screenSize.rows - 1)
         default: break
         }
     }
@@ -76,14 +86,11 @@ class Editor {
                 break
             }
             
-        case .arrowLeft, .arrowRight, .arrowUp, .arrowDown:
+        case .arrowLeft, .arrowRight, .arrowUp, .arrowDown,
+             .pageUp, .pageDown,
+             .home, .end:
             moveCursor(type: key.type)
             
-        case .pageUp, .pageDown:
-            (0..<config.screenSize.rows).forEach { _ in
-                moveCursor(type: key.type == .pageUp ? .arrowUp : .arrowDown)
-            }
-
         default:
             break
         }
@@ -174,10 +181,18 @@ class Editor {
                     if seq[2] == "~".char! {
                         
                         switch seq[1] {
-                        case "5".char!:
+                        case "1".char:
+                            return .init(type: .home)
+                        case "4".char:
+                            return .init(type: .end)
+                        case "5".char:
                             return .init(type: .pageUp)
-                        case "6".char!:
+                        case "6".char:
                             return .init(type: .pageDown)
+                        case "7".char:
+                            return .init(type: .home)
+                        case "8".char:
+                            return .init(type: .end)
                         default: break
                         }
                     }
@@ -192,8 +207,21 @@ class Editor {
                         return .init(type: .arrowRight)
                     case "D".char:
                         return .init(type: .arrowLeft)
+                    case "H".char:
+                        return .init(type: .home)
+                    case "F".char:
+                        return .init(type: .end)
                     default: break
                     }
+                }
+            } else if (seq[0] == "0".char!) {
+                
+                switch seq[1] {
+                case "H".char:
+                    return .init(type: .home)
+                case "F".char:
+                    return .init(type: .end)
+                default: break
                 }
             }
             return .init(type: .escape)
