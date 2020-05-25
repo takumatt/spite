@@ -18,6 +18,7 @@ class Editor {
             case arrowRight
             case arrowUp
             case arrowDown
+            case delete
             case home
             case end
             case pageUp
@@ -183,6 +184,8 @@ class Editor {
                         switch seq[1] {
                         case "1".char:
                             return .init(type: .home)
+                        case "3".char:
+                            return .init(type: .delete)
                         case "4".char:
                             return .init(type: .end)
                         case "5".char:
