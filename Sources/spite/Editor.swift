@@ -95,9 +95,8 @@ class Editor {
         drawRaws(appendBuffer: &ab)
         
         // cursor
-        ab.append(String(format: "\u{1b}[%d;%dH", config.cy + 1, config.cx + 1))
+        ab.append("\u{1b}[\(config.cy + 1);\(config.cx + 1)H")
         
-        ab.append("\u{1b}[H")
         ab.append("\u{1b}[?25h")
         
         write(STDOUT_FILENO, ab.buffer, ab.length)
