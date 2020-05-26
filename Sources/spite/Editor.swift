@@ -103,7 +103,7 @@ class Editor {
         }
     }
     
-    func drawRaws(appendBuffer ab: inout AppendBuffer) {
+    func drawRows(appendBuffer ab: inout AppendBuffer) {
         
         for r in 0..<config.screenSize.rows {
             
@@ -145,7 +145,7 @@ class Editor {
         ab.append("\u{1b}[?25l")
         ab.append("\u{1b}[H")
         
-        drawRaws(appendBuffer: &ab)
+        drawRows(appendBuffer: &ab)
         
         // cursor
         ab.append("\u{1b}[\(config.cy + 1);\(config.cx + 1)H")
