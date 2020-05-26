@@ -13,6 +13,8 @@ func main() -> Int {
     
     terminal.enter(mode: .raw)
     
+    editor.open()
+    
     while true {
         
         editor.refreshScreen()

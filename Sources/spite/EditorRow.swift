@@ -9,12 +9,18 @@ import Foundation
 
 struct EditorRow {
     
-    let size: Int
-    let chars: [char]
+    var chars: [char]
     
-    init(size: Int = 0, chars: [char] = []) {
+    var length: Int {
+        return chars.count
+    }
+    
+    init(chars: [char] = []) {
         
-        self.size = size
         self.chars = chars
+    }
+    
+    mutating func append(_ s: String) {
+        self.chars += Array(s.utf8)
     }
 }

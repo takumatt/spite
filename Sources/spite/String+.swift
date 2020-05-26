@@ -12,4 +12,8 @@ extension String {
     var char: UInt8? {
         return self.first?.asciiValue
     }
+    
+    var size: Int {
+        return Array(self.utf8).count
+    }
 }

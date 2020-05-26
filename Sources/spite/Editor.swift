@@ -34,6 +34,12 @@ class Editor {
         self.config = config
     }
     
+    func open() {
+        let line = "Hello, World!\0"
+        config.row.append(line)
+        config.numberOfRows += 1
+    }
+    
     func moveCursor(type: Key.KeyType) {
         
         switch type {
