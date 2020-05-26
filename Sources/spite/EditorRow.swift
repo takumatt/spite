@@ -6,3 +6,15 @@
 //
 
 import Foundation
+
+struct EditorRow {
+    
+    let size: Int
+    let chars: [char]
+    
+    init(size: Int = 0, chars: [char] = []) {
+        
+        self.size = size
+        self.chars = chars
+    }
+}
