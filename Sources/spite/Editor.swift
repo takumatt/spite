@@ -107,27 +107,37 @@ class Editor {
         
         for r in 0..<config.screenSize.rows {
             
-            if r == config.screenSize.rows / 3 {
+            if r >= config.numberOfRows {
+            
+                if r == config.screenSize.rows / 3 {
+                    
+                    let message = String(
+                        """
+                            Spite editor --version \(SPITE_VERSION)
+                            """
+                            .prefix(Int(config.screenSize.cols))
+                    )
+                    
+                    var padding = (Int(config.screenSize.cols) - message.count) / 2
+                    
+                    if padding > 1 {
+                        ab.append("~")
+                        padding -= 1
+                    }
+                    
+                    (0..<padding).forEach { _ in ab.append(" ") }
+                    
+                    ab.append(message)
+                } else {
+                    ab.append("~")
+                }
+            } else {
                 
-                let message = String(
-                    """
-                    Spite editor --version \(SPITE_VERSION)
-                    """
+                let chars = Array(config.row.chars
                     .prefix(Int(config.screenSize.cols))
                 )
-                
-                var padding = (Int(config.screenSize.cols) - message.count) / 2
-                
-                if padding > 1 {
-                    ab.append("~")
-                    padding -= 1
-                }
-                
-                (0..<padding).forEach { _ in ab.append(" ") }
-                
-                ab.append(message)
-            } else {
-                ab.append("~")
+
+                ab.append(chars)
             }
             
             ab.append("\u{1b}[K")

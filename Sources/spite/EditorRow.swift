@@ -11,7 +11,7 @@ struct EditorRow {
     
     var chars: [char]
     
-    var length: Int {
+    var size: Int {
         return chars.count
     }
     

@@ -21,6 +21,10 @@ struct AppendBuffer {
     
     // TODO: log
     
+    mutating func append(_ chars: [char]) {
+        buffer += chars
+    }
+    
     mutating func append(_ s: String) {
         buffer += Array(s.utf8)
     }
