@@ -6,17 +6,15 @@ import Foundation
 
 class EditorConfig {
     
-    var cx, cy: Int
+    var cursor: (x: Int, y: Int) = (0, 0)
+    var offset: (row: Int, col: Int) = (0, 0)
     
     var screenSize: (rows: UInt16, cols: UInt16)
     var original_termios: termios? = nil
     
-    var row: [EditorRow] = []
-    var offset = 0
+    var rows: [EditorRow] = []
 
     init() {
-        
-        (cx, cy) = (0, 0)
         
         if let size = Terminal.getWindowSize() {
             self.screenSize = size

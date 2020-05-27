@@ -48,32 +48,32 @@ class Editor {
     
     func appendRow(line: String) {
         
-        config.row.append(.init(line: line))
+        config.rows.append(.init(line: line))
     }
     
     func moveCursor(type: Key.KeyType) {
         
         switch type {
         case .arrowLeft:
-            guard config.cx > 0 else { break }
-            config.cx -= 1
+            guard config.cursor.x > 0 else { break }
+            config.cursor.x -= 1
         case .arrowRight:
-            guard config.cx < config.screenSize.cols - 1 else { break }
-            config.cx += 1
+            guard config.cursor.x < config.screenSize.cols - 1 else { break }
+            config.cursor.x += 1
         case .arrowUp:
-            guard config.cy > 0 else { break }
-            config.cy -= 1
+            guard config.cursor.y > 0 else { break }
+            config.cursor.y -= 1
         case .arrowDown:
-            guard config.cy < config.row.count - 1 else { break }
-            config.cy += 1
+            guard config.cursor.y < config.rows.count - 1 else { break }
+            config.cursor.y += 1
         case .home:
-            config.cx = 0
+            config.cursor.x = 0
         case .end:
-            config.cx = Int(config.screenSize.cols - 1)
+            config.cursor.x = Int(config.screenSize.cols - 1)
         case .pageUp:
-            config.cy = 0
+            config.cursor.y = 0
         case .pageDown:
-            config.cy = Int(config.screenSize.rows - 1)
+            config.cursor.y = Int(config.screenSize.rows - 1)
         default: break
         }
     }
@@ -118,11 +118,11 @@ class Editor {
         
         for y in 0..<config.screenSize.rows {
             
-            let row = Int(y) + config.offset
+            let row = Int(y) + config.offset.row
             
-            if row >= config.row.count {
+            if row >= config.rows.count {
                 
-                if config.row.count == 0 && y == config.screenSize.rows / 3 {
+                if config.rows.count == 0 && y == config.screenSize.rows / 3 {
                     
                     let message = String(
                         """
@@ -147,7 +147,7 @@ class Editor {
             } else {
                 
                 let chars = Array(
-                    config.row[Int(row)].chars
+                    config.rows[Int(row)].chars
                         .prefix(Int(config.screenSize.cols))
                 )
                 
@@ -164,12 +164,12 @@ class Editor {
     
     func scroll() {
         
-        if config.cy < config.offset {
-            config.offset = config.cy
+        if config.cursor.y < config.offset.row {
+            config.offset.row = config.cursor.y
         }
         
-        if config.cy >= config.offset + Int(config.screenSize.rows) {
-            config.offset = config.cy - Int(config.screenSize.rows) + 1
+        if config.cursor.y >= config.offset.row + Int(config.screenSize.rows) {
+            config.offset.row = config.cursor.y - Int(config.screenSize.rows) + 1
         }
     }
     
@@ -185,7 +185,7 @@ class Editor {
         drawRows(appendBuffer: &ab)
         
         // cursor
-        ab.append("\u{1b}[\(config.cy - config.offset + 1);\(config.cx + 1)H")
+        ab.append("\u{1b}[\(config.cursor.y - config.offset.row + 1);\(config.cursor.x + 1)H")
         
         ab.append("\u{1b}[?25h")
         
