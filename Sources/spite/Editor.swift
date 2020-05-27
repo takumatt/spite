@@ -64,7 +64,7 @@ class Editor {
             guard config.cy > 0 else { break }
             config.cy -= 1
         case .arrowDown:
-            guard config.cy < config.screenSize.rows - 1 else { break }
+            guard config.cy < config.row.count - 1 else { break }
             config.cy += 1
         case .home:
             config.cx = 0
@@ -162,7 +162,20 @@ class Editor {
         }
     }
     
+    func scroll() {
+        
+        if config.cy < config.offset {
+            config.offset = config.cy
+        }
+        
+        if config.cy >= config.offset + Int(config.screenSize.rows) {
+            config.offset = config.cy - Int(config.screenSize.rows) + 1
+        }
+    }
+    
     func refreshScreen() {
+        
+        scroll()
         
         var ab = AppendBuffer()
         
