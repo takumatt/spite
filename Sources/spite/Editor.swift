@@ -116,7 +116,7 @@ class Editor {
             
             if r >= config.numberOfRows {
             
-                if r == config.screenSize.rows / 3 {
+                if config.numberOfRows == 0 && r == config.screenSize.rows / 3 {
                     
                     let message = String(
                         """
