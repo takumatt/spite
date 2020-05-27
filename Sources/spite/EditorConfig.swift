@@ -12,6 +12,7 @@ class EditorConfig {
     var original_termios: termios? = nil
     
     var row: [EditorRow] = []
+    var offset = 0
 
     init() {
         

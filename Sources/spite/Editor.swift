@@ -116,11 +116,13 @@ class Editor {
     
     func drawRows(appendBuffer ab: inout AppendBuffer) {
         
-        for r in 0..<config.screenSize.rows {
+        for y in 0..<config.screenSize.rows {
             
-            if r >= config.row.count {
+            let row = Int(y) + config.offset
             
-                if config.row.count == 0 && r == config.screenSize.rows / 3 {
+            if row >= config.row.count {
+                
+                if config.row.count == 0 && y == config.screenSize.rows / 3 {
                     
                     let message = String(
                         """
@@ -145,7 +147,7 @@ class Editor {
             } else {
                 
                 let chars = Array(
-                    config.row[Int(r)].chars
+                    config.row[Int(row)].chars
                         .prefix(Int(config.screenSize.cols))
                 )
                 
@@ -154,7 +156,7 @@ class Editor {
             
             ab.append("\u{1b}[K")
             
-            if r < config.screenSize.rows - 1 {
+            if y < config.screenSize.rows - 1 {
                 ab.append("\r\n")
             }
         }
