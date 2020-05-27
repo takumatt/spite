@@ -185,7 +185,7 @@ class Editor {
         drawRows(appendBuffer: &ab)
         
         // cursor
-        ab.append("\u{1b}[\(config.cy + 1);\(config.cx + 1)H")
+        ab.append("\u{1b}[\(config.cy - config.offset + 1);\(config.cx + 1)H")
         
         ab.append("\u{1b}[?25h")
         
