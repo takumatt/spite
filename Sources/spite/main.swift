@@ -13,7 +13,13 @@ func main() -> Int {
     
     terminal.enter(mode: .raw)
     
-    editor.open()
+    if CommandLine.argc >= 2 {
+        do {
+            try editor.open(path: CommandLine.arguments[1])
+        } catch {
+            Terminal.die(description: "fopen")
+        }
+    }
     
     while true {
         

@@ -34,9 +34,16 @@ class Editor {
         self.config = config
     }
     
-    func open() {
-        let line = "Hello, World!\0"
-        config.row.append(line)
+    func open(path: String) throws {
+        
+        let fileURL = URL(fileURLWithPath: path)
+        
+        guard let text = try String(contentsOf: fileURL, encoding: .utf8)
+            .components(separatedBy: .init(charactersIn: "\r\n"))
+            .first
+            else { return }
+          
+        config.row.append(text)
         config.numberOfRows += 1
     }
     
