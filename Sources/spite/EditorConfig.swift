@@ -11,13 +11,11 @@ class EditorConfig {
     var screenSize: (rows: UInt16, cols: UInt16)
     var original_termios: termios? = nil
     
-    var numberOfRows: Int
-    var row: EditorRow = .init()
+    var row: [EditorRow] = []
 
     init() {
         
         (cx, cy) = (0, 0)
-        numberOfRows = 0
         
         if let size = Terminal.getWindowSize() {
             self.screenSize = size

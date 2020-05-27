@@ -15,12 +15,13 @@ struct EditorRow {
         return chars.count
     }
     
-    init(chars: [char] = []) {
+    init(line: String) {
         
-        self.chars = chars
+        self.chars = Array((line + "\0").utf8)
     }
     
-    mutating func append(_ s: String) {
-        self.chars += Array(s.utf8)
+    mutating func append(line: String) {
+        
+        self.chars += Array((line + "\0").utf8)
     }
 }

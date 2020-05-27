@@ -38,13 +38,17 @@ class Editor {
         
         let fileURL = URL(fileURLWithPath: path)
         
-        guard let text = try String(contentsOf: fileURL, encoding: .utf8)
+        let lines = try String(contentsOf: fileURL, encoding: .utf8)
             .components(separatedBy: .init(charactersIn: "\r\n"))
-            .first
-            else { return }
-          
-        config.row.append(text)
-        config.numberOfRows += 1
+        
+        lines.forEach { line in
+            appendRow(line: line)
+        }
+    }
+    
+    func appendRow(line: String) {
+        
+        config.row.append(.init(line: line))
     }
     
     func moveCursor(type: Key.KeyType) {
@@ -114,9 +118,9 @@ class Editor {
         
         for r in 0..<config.screenSize.rows {
             
-            if r >= config.numberOfRows {
+            if r >= config.row.count {
             
-                if config.numberOfRows == 0 && r == config.screenSize.rows / 3 {
+                if config.row.count == 0 && r == config.screenSize.rows / 3 {
                     
                     let message = String(
                         """
@@ -140,10 +144,11 @@ class Editor {
                 }
             } else {
                 
-                let chars = Array(config.row.chars
-                    .prefix(Int(config.screenSize.cols))
+                let chars = Array(
+                    config.row[Int(r)].chars
+                        .prefix(Int(config.screenSize.cols))
                 )
-
+                
                 ab.append(chars)
             }
             
