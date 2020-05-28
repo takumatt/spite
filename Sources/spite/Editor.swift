@@ -54,32 +54,53 @@ class Editor {
     func moveCursor(type: Key.KeyType) {
         
         switch type {
+            
         case .arrowLeft:
-            guard config.cursor.x > 0 else { break }
-            config.cursor.x -= 1
-        case .arrowRight:
-            if let row = config.currentRow, config.cursor.x < row.size {
-                config.cursor.x += 1
+            if config.cursor.x > 0 {
+                config.cursor.x -= 1
+            } else {
+                guard config.cursor.y > 0 else { break }
+                config.cursor.y -= 1
+                config.cursor.x = config.currentRow.size
             }
+            
+        case .arrowRight:
+            if config.cursor.x < config.currentRow.size {
+                config.cursor.x += 1
+            } else {
+                guard config.cursor.y < config.rows.count,
+                    config.cursor.x == config.currentRow.size else {
+                        break
+                }
+                config.cursor.y += 1
+                config.cursor.x = 0
+            }
+            
         case .arrowUp:
             guard config.cursor.y > 0 else { break }
             config.cursor.y -= 1
+            
         case .arrowDown:
             guard config.cursor.y < config.rows.count - 1 else { break }
             config.cursor.y += 1
+            
         case .home:
             config.cursor.x = 0
+            
         case .end:
             config.cursor.x = Int(config.screenSize.cols - 1)
+            
         case .pageUp:
             config.cursor.y = 0
+            
         case .pageDown:
             config.cursor.y = Int(config.screenSize.rows - 1)
+            
         default: break
         }
         
-        if let row = config.currentRow, config.cursor.x > row.size {
-            config.cursor.x = row.size
+        if config.cursor.x > config.currentRow.size {
+            config.cursor.x = config.currentRow.size
         }
     }
     

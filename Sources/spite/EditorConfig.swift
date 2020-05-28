@@ -14,7 +14,7 @@ class EditorConfig {
     
     var rows: [EditorRow] = []
     
-    var currentRow: EditorRow? {
+    var currentRow: EditorRow {
         return rows[cursor.y]
     }
 
