@@ -58,7 +58,6 @@ class Editor {
             guard config.cursor.x > 0 else { break }
             config.cursor.x -= 1
         case .arrowRight:
-            guard config.cursor.x < config.screenSize.cols - 1 else { break }
             config.cursor.x += 1
         case .arrowUp:
             guard config.cursor.y > 0 else { break }
@@ -146,12 +145,17 @@ class Editor {
                 }
             } else {
                 
-                let chars = Array(
-                    config.rows[Int(row)].chars
-                        .prefix(Int(config.screenSize.cols))
-                )
+                let rowChars = config.rows[Int(row)].chars
                 
-                ab.append(chars)
+                if rowChars.count > config.offset.col {
+
+                    let offseted = rowChars.suffix(from: config.offset.col)
+                    let chars = Array(offseted.prefix(Int(config.screenSize.cols)))
+                    
+                    ab.append(chars)
+                } else {
+                    ab.append("")
+                }
             }
             
             ab.append("\u{1b}[K")
@@ -171,6 +175,14 @@ class Editor {
         if config.cursor.y >= config.offset.row + Int(config.screenSize.rows) {
             config.offset.row = config.cursor.y - Int(config.screenSize.rows) + 1
         }
+        
+        if config.cursor.x < config.offset.col {
+            config.offset.col = config.cursor.x
+        }
+        
+        if config.cursor.x >= config.offset.col + Int(config.screenSize.cols) {
+            config.offset.col = config.cursor.x - Int(config.screenSize.cols) + 1
+        }
     }
     
     func refreshScreen() {
@@ -185,7 +197,11 @@ class Editor {
         drawRows(appendBuffer: &ab)
         
         // cursor
-        ab.append("\u{1b}[\(config.cursor.y - config.offset.row + 1);\(config.cursor.x + 1)H")
+        ab.append(String(
+            format: "\u{1b}[%d;%dH",
+            config.cursor.y - config.offset.row + 1,
+            config.cursor.x - config.offset.col + 1
+            ))
         
         ab.append("\u{1b}[?25h")
         
