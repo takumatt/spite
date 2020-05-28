@@ -11,8 +11,19 @@ struct EditorRow {
     
     var chars: [char]
     
+    var render: [char] = []
+    
     var size: Int {
         return chars.count
+    }
+    
+    var renderSize: Int {
+        return render.count
+    }
+    
+    init() {
+        
+        self.chars = []
     }
     
     init(line: String) {
@@ -22,6 +33,6 @@ struct EditorRow {
     
     mutating func append(line: String) {
         
-        self.chars += Array((line + "\0").utf8)
+        chars += Array((line + "\0").utf8)
     }
 }
