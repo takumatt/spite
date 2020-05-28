@@ -9,7 +9,11 @@ import Foundation
 
 struct EditorRow {
     
-    var chars: [char]
+    var chars: [char] {
+        didSet {
+            updateRender()
+        }
+    }
     
     var render: [char] = []
     
@@ -34,5 +38,16 @@ struct EditorRow {
     mutating func append(line: String) {
         
         chars += Array((line + "\0").utf8)
+    }
+    
+    private mutating func updateRender() {
+
+        render = Array(
+            chars.map { char -> [char] in
+                return char == "\t".char!
+                    ? String(repeating: " ", count: SPITE_TAB_STOP).chars
+                    : [char]
+            }.joined()
+        )
     }
 }
