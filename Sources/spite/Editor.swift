@@ -58,7 +58,9 @@ class Editor {
             guard config.cursor.x > 0 else { break }
             config.cursor.x -= 1
         case .arrowRight:
-            config.cursor.x += 1
+            if let row = config.currentRow, config.cursor.x < row.size {
+                config.cursor.x += 1
+            }
         case .arrowUp:
             guard config.cursor.y > 0 else { break }
             config.cursor.y -= 1
@@ -74,6 +76,10 @@ class Editor {
         case .pageDown:
             config.cursor.y = Int(config.screenSize.rows - 1)
         default: break
+        }
+        
+        if let row = config.currentRow, config.cursor.x > row.size {
+            config.cursor.x = row.size
         }
     }
     

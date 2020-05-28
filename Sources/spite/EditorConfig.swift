@@ -13,6 +13,10 @@ class EditorConfig {
     var original_termios: termios? = nil
     
     var rows: [EditorRow] = []
+    
+    var currentRow: EditorRow? {
+        return rows[cursor.y]
+    }
 
     init() {
         
