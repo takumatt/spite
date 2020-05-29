@@ -172,7 +172,7 @@ class Editor {
                 }
             } else {
                 
-                let rowChars = config.rows[Int(row)].chars
+                let rowChars = config.rows[Int(row)].render
                 
                 if rowChars.count > config.offset.col {
 
