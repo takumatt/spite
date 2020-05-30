@@ -43,4 +43,20 @@ struct EditorRow {
         
         chars += Array((line + "\0").utf8)
     }
+    
+    func cursorToPositionX(x: Int) -> Int {
+        
+        var px = 0
+        
+        for j in 0..<x {
+            
+            if self.chars[j] == "\t".char! {
+                px += (SPITE_TAB_STOP - 1) - (px % SPITE_TAB_STOP)
+            }
+            
+            px += 1
+        }
+        
+        return px
+    }
 }

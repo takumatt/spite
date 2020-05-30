@@ -195,6 +195,12 @@ class Editor {
     
     func scroll() {
         
+        config.position.x = 0
+        
+        if config.cursor.y < config.rows.count {
+            config.position.x = config.currentRow.cursorToPositionX(x: config.cursor.x)
+        }
+        
         if config.cursor.y < config.offset.row {
             config.offset.row = config.cursor.y
         }
@@ -203,12 +209,12 @@ class Editor {
             config.offset.row = config.cursor.y - Int(config.screenSize.rows) + 1
         }
         
-        if config.cursor.x < config.offset.col {
-            config.offset.col = config.cursor.x
+        if config.position.x < config.offset.col {
+            config.offset.col = config.position.x
         }
         
-        if config.cursor.x >= config.offset.col + Int(config.screenSize.cols) {
-            config.offset.col = config.cursor.x - Int(config.screenSize.cols) + 1
+        if config.position.x >= config.offset.col + Int(config.screenSize.cols) {
+            config.offset.col = config.position.x - Int(config.screenSize.cols) + 1
         }
     }
     
@@ -227,7 +233,7 @@ class Editor {
         ab.append(String(
             format: "\u{1b}[%d;%dH",
             config.cursor.y - config.offset.row + 1,
-            config.cursor.x - config.offset.col + 1
+            config.position.x - config.offset.col + 1
             ))
         
         ab.append("\u{1b}[?25h")

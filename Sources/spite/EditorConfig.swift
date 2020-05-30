@@ -7,6 +7,7 @@ import Foundation
 class EditorConfig {
     
     var cursor: (x: Int, y: Int) = (0, 0)
+    var position: (x: Int, y: Int) = (0, 0)
     var offset: (row: Int, col: Int) = (0, 0)
     
     var screenSize: (rows: UInt16, cols: UInt16)
