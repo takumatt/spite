@@ -13,6 +13,8 @@ class EditorConfig {
     var screenSize: (rows: UInt16, cols: UInt16)
     var original_termios: termios? = nil
     
+    var fileName: String?
+    
     var rows: [EditorRow] = []
     
     var currentRow: EditorRow {

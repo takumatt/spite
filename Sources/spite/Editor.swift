@@ -44,6 +44,8 @@ class Editor {
         lines.forEach { line in
             appendRow(line: line)
         }
+        
+        config.fileName = path
     }
     
     func appendRow(line: String) {
@@ -201,7 +203,18 @@ class Editor {
         
         ab.append("\u{1b}[7m")
         
-        (0..<config.screenSize.cols).forEach { _ in
+        let fileName = (config.fileName ?? "[No Name]")
+            .prefix(20)
+        
+        let statusBarText = String(
+            ("\(fileName) - \(config.rows.count) lines")
+                .prefix(Int(config.screenSize.cols)
+            )
+        )
+        
+        ab.append(statusBarText)
+        
+        (0..<(Int(config.screenSize.cols) - statusBarText.count)).forEach { _ in
             ab.append(" ")
         }
         
