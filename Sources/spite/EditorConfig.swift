@@ -27,6 +27,8 @@ class EditorConfig {
             self.screenSize = (0, 0)
             Terminal.die(description: "getWindowSize")
         }
+        
+        self.screenSize.rows -= 1
     }
     
     // TODO: move

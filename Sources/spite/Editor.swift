@@ -193,11 +193,19 @@ class Editor {
             }
             
             ab.append("\u{1b}[K")
-            
-            if y < config.screenSize.rows - 1 {
-                ab.append("\r\n")
-            }
+            ab.append("\r\n")
         }
+    }
+    
+    func drawStatusBar(appendBuffer ab: inout AppendBuffer) {
+        
+        ab.append("\u{1b}[7m")
+        
+        (0..<config.screenSize.cols).forEach { _ in
+            ab.append(" ")
+        }
+        
+        ab.append("\u{1b}[m")
     }
     
     func scroll() {
@@ -235,13 +243,14 @@ class Editor {
         ab.append("\u{1b}[H")
         
         drawRows(appendBuffer: &ab)
+        drawStatusBar(appendBuffer: &ab)
         
-        // cursor
         ab.append(String(
             format: "\u{1b}[%d;%dH",
             config.cursor.y - config.offset.row + 1,
             config.position.x - config.offset.col + 1
-            ))
+            )
+        )
         
         ab.append("\u{1b}[?25h")
         
