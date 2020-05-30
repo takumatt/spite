@@ -44,6 +44,17 @@ struct EditorRow {
         chars += Array((line + "\0").utf8)
     }
     
+    mutating func insert(_ c: char, at position: Int) {
+        
+        var pos = position
+        
+        if position < 0 || position > size {
+            pos = size
+        }
+        
+        chars.insert(c, at: pos)
+    }
+    
     func cursorToPositionX(x: Int) -> Int {
         
         var px = 0

@@ -48,6 +48,22 @@ class Editor {
         config.fileName = path
     }
     
+    func insert(_ c: char) {
+        
+        guard config.cursor.x < config.currentRow.size else {
+            return 
+        }
+        
+        if config.cursor.y == config.rows.count {
+            appendRow(line: "")
+        }
+        
+        config.rows[config.cursor.y]
+            .insert(c, at: config.cursor.x)
+        
+        config.cursor.x += 1
+    }
+    
     func setStatusMessage(text: String) {
         config.statusMessage = text
         config.initializedAt = Date()
@@ -131,17 +147,8 @@ class Editor {
             case CTRL_KEY("q"):
                 editorConfig.exitWith(code: 0)
                 
-            case "w".char:
-                moveCursor(type: .arrowUp)
-            case "a".char:
-                moveCursor(type: .arrowLeft)
-            case "s".char:
-                moveCursor(type: .arrowDown)
-            case "d".char:
-                moveCursor(type: .arrowRight)
-                
             default:
-                break
+                insert(char)
             }
             
         case .arrowLeft, .arrowRight, .arrowUp, .arrowDown,
