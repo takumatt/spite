@@ -6,14 +6,20 @@ import Foundation
 
 class EditorConfig {
     
-    var cursor: (x: Int, y: Int) = (0, 0)
-    var position: (x: Int, y: Int) = (0, 0)
-    var offset: (row: Int, col: Int) = (0, 0)
+    // Variables: Should be mutable globally
     
     var screenSize: (rows: UInt16, cols: UInt16)
     var original_termios: termios? = nil
     
+    // Variables: No Dependencies
+    
+    var cursor: (x: Int, y: Int) = (0, 0)
+    var position: (x: Int, y: Int) = (0, 0)
+    var offset: (row: Int, col: Int) = (0, 0)
+    
     var fileName: String?
+    var statusMessage: String?
+    var initializedAt: Date?
     
     var rows: [EditorRow] = []
     
@@ -30,7 +36,9 @@ class EditorConfig {
             Terminal.die(description: "getWindowSize")
         }
         
-        self.screenSize.rows -= 1
+        // status bar and status message
+        
+        self.screenSize.rows -= 2
     }
     
     // TODO: move

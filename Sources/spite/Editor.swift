@@ -48,6 +48,11 @@ class Editor {
         config.fileName = path
     }
     
+    func setStatusMessage(text: String) {
+        config.statusMessage = text
+        config.initializedAt = Date()
+    }
+    
     func appendRow(line: String) {
         
         config.rows.append(.init(line: line))
@@ -231,6 +236,22 @@ class Editor {
         
         ab.append(statusBarText)
         ab.append("\u{1b}[m")
+        ab.append("\r\n")
+    }
+    
+    func drawMessageBar(appendBuffer ab: inout AppendBuffer) {
+        
+        ab.append("\u{1b}[K")
+        
+        guard let initializedAt = config.initializedAt,
+            Date() < initializedAt.addingTimeInterval(5),
+            let message = config.statusMessage else {
+            return
+        }
+        
+        ab.append(String(
+            message.prefix(Int(config.screenSize.cols))
+        ))
     }
     
     func scroll() {
@@ -269,6 +290,7 @@ class Editor {
         
         drawRows(appendBuffer: &ab)
         drawStatusBar(appendBuffer: &ab)
+        drawMessageBar(appendBuffer: &ab)
         
         ab.append(String(
             format: "\u{1b}[%d;%dH",

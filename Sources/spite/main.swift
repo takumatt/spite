@@ -3,7 +3,6 @@ import Foundation
 // TODO: move
 let SPITE_VERSION = "0.0.1"
 let SPITE_TAB_STOP = 8
-let SPITE_STATUS_BAR_HEIGHT = 1
 
 typealias char = UInt8
 let editorConfig = EditorConfig()
@@ -22,6 +21,8 @@ func main() -> Int {
             Terminal.die(description: "fopen")
         }
     }
+    
+    editor.setStatusMessage(text: "HELP: Ctrl-Q = quit")
     
     while true {
         
