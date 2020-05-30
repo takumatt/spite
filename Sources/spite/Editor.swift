@@ -91,10 +91,15 @@ class Editor {
             config.cursor.x = Int(config.screenSize.cols - 1)
             
         case .pageUp:
-            config.cursor.y = 0
+            config.cursor.y = config.offset.row
+            (0..<Int(config.screenSize.rows)).forEach { _ in moveCursor(type: .arrowUp) }
             
         case .pageDown:
-            config.cursor.y = Int(config.screenSize.rows - 1)
+            config.cursor.y = config.offset.row + Int(config.screenSize.rows) - 1
+            if config.cursor.y > config.rows.count {
+                config.cursor.y = config.rows.count
+            }
+            (0..<Int(config.screenSize.rows)).forEach { _ in moveCursor(type: .arrowDown) }
             
         default: break
         }
