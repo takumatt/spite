@@ -206,18 +206,30 @@ class Editor {
         let fileName = (config.fileName ?? "[No Name]")
             .prefix(20)
         
-        let statusBarText = String(
-            ("\(fileName) - \(config.rows.count) lines")
-                .prefix(Int(config.screenSize.cols)
-            )
-        )
+        let leftStatusBarText = "\(fileName) - \(config.rows.count) lines"
+        let rightStatusBarText = "\(config.cursor.y + 1)/\(config.rows.count)"
+        
+        let maxLength = Int(self.config.screenSize.cols)
+        
+        let statusBarText: String = {
+            
+            let padding = 1
+            
+            guard leftStatusBarText.count + rightStatusBarText.count + padding < maxLength else {
+                
+                let leftMaxLength = maxLength - rightStatusBarText.count - padding
+                
+                return String(leftStatusBarText.prefix(leftMaxLength))
+                    + " " + rightStatusBarText
+            }
+            
+            
+            return leftStatusBarText
+                + String(repeating: " ", count: maxLength - leftStatusBarText.count - rightStatusBarText.count)
+                + rightStatusBarText
+        }()
         
         ab.append(statusBarText)
-        
-        (0..<(Int(config.screenSize.cols) - statusBarText.count)).forEach { _ in
-            ab.append(" ")
-        }
-        
         ab.append("\u{1b}[m")
     }
     
