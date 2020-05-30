@@ -14,6 +14,7 @@ class Editor {
         enum KeyType: Equatable {
             case alphabet(char)
             case escape
+            case backspace
             case arrowLeft
             case arrowRight
             case arrowUp
@@ -144,12 +145,33 @@ class Editor {
             
             switch char {
                 
+            case "\r".char!:
+                // TODO
+                break
+                
             case CTRL_KEY("q"):
                 editorConfig.exitWith(code: 0)
+                
+            case CTRL_KEY("h"):
+                // TODO
+                break
+                
+            case CTRL_KEY("l"),
+                 "\u{1b}".char!:
+                break
+                
                 
             default:
                 insert(char)
             }
+            
+        case .backspace:
+            // TODO
+            break
+            
+        case .delete:
+            // TODO
+            break
             
         case .arrowLeft, .arrowRight, .arrowUp, .arrowDown,
              .pageUp, .pageDown,
@@ -391,6 +413,9 @@ class Editor {
             }
             return .init(type: .escape)
         } else {
+            if c == 127 {
+                return .init(type: .backspace)
+            }
             return .init(type: .alphabet(c))
         }
     }
