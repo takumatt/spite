@@ -88,7 +88,9 @@ class Editor {
             config.cursor.x = 0
             
         case .end:
-            config.cursor.x = Int(config.screenSize.cols - 1)
+            if config.cursor.y < config.rows.count {
+                config.cursor.x = Int(config.screenSize.cols - 1)
+            }
             
         case .pageUp:
             config.cursor.y = config.offset.row
