@@ -47,6 +47,7 @@ class Editor {
         }
         
         config.fileName = path
+        config.isDirty = false
     }
     
     func save(path: String) throws {
@@ -58,6 +59,7 @@ class Editor {
         }
         
         try str.write(to: fileURL, atomically: true, encoding: .utf8)
+        config.isDirty = false
     }
     
     func insert(_ c: char) {
@@ -74,6 +76,7 @@ class Editor {
             .insert(c, at: config.cursor.x)
         
         config.cursor.x += 1
+        config.isDirty = true
     }
     
     func setStatusMessage(text: String) {
@@ -84,6 +87,7 @@ class Editor {
     func appendRow(line: String) {
         
         config.rows.append(.init(line: line))
+        config.isDirty = true
     }
     
     func moveCursor(type: Key.KeyType) {
@@ -262,8 +266,9 @@ class Editor {
         
         let fileName = (config.fileName ?? "[No Name]")
             .prefix(20)
+        let modified = config.isDirty ? "(modified)" : ""
         
-        let leftStatusBarText = "\(fileName) - \(config.rows.count) lines"
+        let leftStatusBarText = "\(fileName) - \(config.rows.count) lines \(modified)"
         let rightStatusBarText = "\(config.cursor.y + 1)/\(config.rows.count)"
         
         let maxLength = Int(self.config.screenSize.cols)

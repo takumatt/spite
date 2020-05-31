@@ -21,6 +21,8 @@ class EditorConfig {
     var statusMessage: String?
     var initializedAt: Date?
     
+    var isDirty = false
+    
     var rows: [EditorRow] = []
     
     var currentRow: EditorRow {
