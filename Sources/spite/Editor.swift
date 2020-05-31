@@ -49,6 +49,17 @@ class Editor {
         config.fileName = path
     }
     
+    func save(path: String) throws {
+        
+        let fileURL = URL(fileURLWithPath: path)
+        
+        let str = config.rows.reduce("") { res, row in
+            return res + (row.string ?? "") + "\n"
+        }
+        
+        try str.write(to: fileURL, atomically: true, encoding: .utf8)
+    }
+    
     func insert(_ c: char) {
         
         guard config.cursor.x < config.currentRow.size else {
@@ -151,6 +162,18 @@ class Editor {
                 
             case CTRL_KEY("q"):
                 editorConfig.exitWith(code: 0)
+                
+            case CTRL_KEY("s"):
+                if let fileName = config.fileName {
+                    do {
+                        try save(path: fileName)
+                        setStatusMessage(text: "Wrote \(fileName)")
+                    } catch {
+                        setStatusMessage(text: "\(error)")
+                    }
+                } else {
+                    setStatusMessage(text: "[No File]")
+                }
                 
             case CTRL_KEY("h"):
                 // TODO

@@ -21,6 +21,10 @@ struct EditorRow {
         )
     }
     
+    var string: String? {
+        return String(bytes: chars, encoding: .utf8)
+    }
+    
     var size: Int {
         return chars.count
     }
