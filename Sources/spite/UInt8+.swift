@@ -8,10 +8,10 @@
 import Foundation
 
 extension UInt8 {
+  
+  func equals(to char: Character) -> Bool {
     
-    func equals(to char: Character) -> Bool {
-        
-        guard let asciiValue = char.asciiValue else { return false }
-        return self == asciiValue
-    }
+    guard let asciiValue = char.asciiValue else { return false }
+    return self == asciiValue
+  }
 }

@@ -8,24 +8,24 @@
 import Foundation
 
 struct AppendBuffer {
-    
-    var buffer: [char]
-    
-    var length: Int {
-        return buffer.count
-    }
-    
-    init() {
-        self.buffer = []
-    }
-    
-    // TODO: log
-    
-    mutating func append(_ chars: [char]) {
-        buffer += chars
-    }
-    
-    mutating func append(_ s: String) {
-        buffer += Array(s.utf8)
-    }
+  
+  var buffer: [char]
+  
+  var length: Int {
+    return buffer.count
+  }
+  
+  init() {
+    self.buffer = []
+  }
+  
+  // TODO: log
+  
+  mutating func append(_ chars: [char]) {
+    buffer += chars
+  }
+  
+  mutating func append(_ s: String) {
+    buffer += Array(s.utf8)
+  }
 }
