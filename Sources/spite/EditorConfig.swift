@@ -22,6 +22,7 @@ class EditorConfig {
   var initializedAt: Date?
   
   var isDirty = false
+  var keyTypedLast: Editor.Key?
   
   var rows: [EditorRow] = []
   
@@ -41,6 +42,7 @@ class EditorConfig {
     // status bar and status message
     
     self.screenSize.rows -= 2
+    self.keyTypedLast = nil
   }
   
   // TODO: move

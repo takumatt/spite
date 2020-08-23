@@ -6,10 +6,9 @@
 //
 
 import Foundation
-
 class Editor {
   
-  struct Key {
+  struct Key: Equatable {
     
     enum KeyType: Equatable {
       case alphabet(char)
@@ -165,6 +164,10 @@ class Editor {
         break
         
       case CTRL_KEY("q"):
+        if config.isDirty && config.keyTypedLast != .some(.init(type: .alphabet(CTRL_KEY("q")))) {
+          setStatusMessage(text: "WARNING! File has unsaved changes. Press Ctrl-Q again to quit.")
+          break
+        }
         editorConfig.exitWith(code: 0)
         
       case CTRL_KEY("s"):
@@ -208,6 +211,8 @@ class Editor {
     default:
       break
     }
+    
+    config.keyTypedLast = key
   }
   
   func drawRows(appendBuffer ab: inout AppendBuffer) {
